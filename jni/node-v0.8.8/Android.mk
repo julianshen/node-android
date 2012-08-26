@@ -11,7 +11,6 @@ local_src_files := \
 	src/node_buffer.cc \
 	src/node_constants.cc \
 	src/node_crypto.cc \
-	src/node_dtrace.cc \
 	src/node_extensions.cc \
 	src/node_file.cc \
 	src/node_http_parser.cc \
@@ -58,7 +57,7 @@ local_c_flags := \
 	-D__POSIX__ \
 	-DARCH=\"$(TARGET_ARCH)\" \
 	-DPLATFORM=\"android\" \
-	-DHAVE_CONFIG_H=1
+	-DHAVE_CONFIG_H=1 
 	
 local_js_files := \
 	$(LOCAL_PATH)/src/node.js \
