@@ -60,7 +60,7 @@ local_c_flags := \
 	-DPLATFORM=\"android\" \
 	-DHAVE_CONFIG_H=1
 	
-local_js_files = \
+local_js_files := \
 	$(LOCAL_PATH)/src/node.js \
 	$(LOCAL_PATH)/lib/_debugger.js \
 	$(LOCAL_PATH)/lib/_linklist.js \
@@ -99,6 +99,7 @@ local_js_files = \
 	$(LOCAL_PATH)/lib/vm.js \
 	$(LOCAL_PATH)/lib/zlib.js 
 
+local_js_files += $(LOCAL_PATH)/config.gypi
 
 #######################################
 # target node executeable
