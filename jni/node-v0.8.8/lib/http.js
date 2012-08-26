@@ -828,10 +828,10 @@ OutgoingMessage.prototype.end = function(data, encoding) {
 OutgoingMessage.prototype._finish = function() {
   assert(this.connection);
   if (this instanceof ServerResponse) {
-    DTRACE_HTTP_SERVER_RESPONSE(this.connection);
+    //DTRACE_HTTP_SERVER_RESPONSE(this.connection);
   } else {
     assert(this instanceof ClientRequest);
-    DTRACE_HTTP_CLIENT_REQUEST(this, this.connection);
+    //DTRACE_HTTP_CLIENT_REQUEST(this, this.connection);
   }
   this.emit('finish');
 };
@@ -1451,7 +1451,7 @@ function parserOnIncomingClient(res, shouldKeepAlive) {
   }
 
 
-  DTRACE_HTTP_CLIENT_RESPONSE(socket, req);
+  //DTRACE_HTTP_CLIENT_RESPONSE(socket, req);
   req.emit('response', res);
   req.res = res;
   res.req = req;
@@ -1747,7 +1747,7 @@ function connectionListener(socket) {
     var res = new ServerResponse(req);
     debug('server response shouldKeepAlive: ' + shouldKeepAlive);
     res.shouldKeepAlive = shouldKeepAlive;
-    DTRACE_HTTP_SERVER_REQUEST(req, socket);
+    //DTRACE_HTTP_SERVER_REQUEST(req, socket);
 
     if (socket._httpMessage) {
       // There are already pending outgoing res, append.

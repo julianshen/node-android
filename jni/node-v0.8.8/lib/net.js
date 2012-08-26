@@ -262,7 +262,7 @@ Socket.prototype.end = function(data, encoding) {
   this.writable = false;
 
   if (data) this.write(data, encoding);
-  DTRACE_NET_STREAM_END(this);
+  //DTRACE_NET_STREAM_END(this);
 
   if (!this.readable) {
     this.destroySoon();
@@ -1033,7 +1033,7 @@ function onconnection(clientHandle) {
   self._connections++;
   socket.server = self;
 
-  DTRACE_NET_SERVER_CONNECTION(socket);
+  //DTRACE_NET_SERVER_CONNECTION(socket);
   self.emit('connection', socket);
   socket.emit('connect');
 }
