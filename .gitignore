@@ -16,4 +16,4 @@ gen/
 local.properties
 
 obj/
-lib/armeabi
+libs/armeabi
