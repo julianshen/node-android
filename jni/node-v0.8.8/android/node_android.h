@@ -19,35 +19,20 @@
 // OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
 // USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+#ifndef node_android_h
+#define node_android_h
 
-NODE_EXT_LIST_START
-NODE_EXT_LIST_ITEM(node_buffer)
-NODE_EXT_LIST_ITEM(node_typed_array)
-#if HAVE_OPENSSL
-NODE_EXT_LIST_ITEM(node_crypto)
-#endif
-NODE_EXT_LIST_ITEM(node_evals)
-NODE_EXT_LIST_ITEM(node_fs)
-NODE_EXT_LIST_ITEM(node_http_parser)
-#ifdef __POSIX__
-NODE_EXT_LIST_ITEM(node_signal_watcher)
-#endif
-NODE_EXT_LIST_ITEM(node_os)
-NODE_EXT_LIST_ITEM(node_zlib)
+#include "node.h"
+#include "v8.h"
 
-// libuv rewrite
-NODE_EXT_LIST_ITEM(node_timer_wrap)
-NODE_EXT_LIST_ITEM(node_tcp_wrap)
-NODE_EXT_LIST_ITEM(node_udp_wrap)
-NODE_EXT_LIST_ITEM(node_pipe_wrap)
-NODE_EXT_LIST_ITEM(node_cares_wrap)
-NODE_EXT_LIST_ITEM(node_tty_wrap)
-NODE_EXT_LIST_ITEM(node_process_wrap)
-NODE_EXT_LIST_ITEM(node_fs_event_wrap)
+namespace node {
 
-#ifdef ANDROID
-//Android
-NODE_EXT_LIST_ITEM(node_android)
-#endif
-NODE_EXT_LIST_END
+class Android {
+public:
+  static void Initialize (v8::Handle<v8::Object> target);
+};
 
+
+}  // namespace node
+
+#endif  // node_android_h

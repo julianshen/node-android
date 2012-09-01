@@ -14,7 +14,7 @@ include $(NODE_DEP_PATH)/http_parser/Android.mk
 include $(NODE_DEP_PATH)/uv/Android.mk
 
 #for V8
-ENABLE_V8_SNAPSHOT = true
+ENABLE_V8_SNAPSHOT = false
 include $(NODE_DEP_PATH)/v8/Android.libv8.mk
 #include $(NODE_DEP_PATH)/v8/Android.v8shell.mk
 
