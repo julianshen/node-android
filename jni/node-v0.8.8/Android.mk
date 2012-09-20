@@ -31,7 +31,7 @@ local_src_files := \
 	src/tty_wrap.cc \
 	src/udp_wrap.cc \
 	src/v8_typed_array.cc \
-	android/node_android.cc
+	../android/node_android.cc
 
 local_node_main_src = \
 	src/node_main.cc 
@@ -49,7 +49,7 @@ local_c_includes := \
 	$(LOCAL_PATH)/deps/openssl/config/android/ \
 	$(LOCAL_PATH)/deps/openssl/openssl/include \
 	$(LOCAL_PATH)/src \
-	$(LOCAL_PATH)/android \
+	$(LOCAL_PATH)/../android \
 	$(gen_path)
 	
 
@@ -99,7 +99,7 @@ local_js_files := \
 	$(LOCAL_PATH)/lib/util.js \
 	$(LOCAL_PATH)/lib/vm.js \
 	$(LOCAL_PATH)/lib/zlib.js \
-	$(LOCAL_PATH)/android/android.js
+	$(LOCAL_PATH)/../android/android.js
 
 local_js_files += $(LOCAL_PATH)/config.gypi
 
@@ -133,3 +133,20 @@ LOCAL_STATIC_LIBRARIES := libnode_static libuv_static libssl_static libcrypto_st
 LOCAL_LDLIBS    += -llog
 
 include $(BUILD_EXECUTABLE)
+
+include $(CLEAR_VARS)
+
+JNI_SRC_FILES := \
+    ../android/node_jni.cc
+
+LOCAL_MODULE_TAGS := optional
+LOCAL_MODULE := node_jni
+
+LOCAL_CPP_EXTENSION := .cc
+LOCAL_SRC_FILES += $(JNI_SRC_FILES)
+LOCAL_CFLAGS += $(local_c_flags)
+LOCAL_C_INCLUDES += $(local_c_includes)
+LOCAL_STATIC_LIBRARIES := libnode_static libuv_static libssl_static libcrypto_static libv8 libhttpparser_static libz
+LOCAL_LDLIBS    += -llog
+
+include $(BUILD_SHARED_LIBRARY)
