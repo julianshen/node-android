@@ -10,10 +10,10 @@ extern "C" {
 /*
  * Class:     org_nodejs_core_NodeJSCore
  * Method:    run
- * Signature: ()V
+ * Signature: (Ljava/lang/String;)V
  */
 JNIEXPORT void JNICALL Java_org_nodejs_core_NodeJSCore_run
-  (JNIEnv *, jclass);
+  (JNIEnv *, jclass, jstring);
 
 #ifdef __cplusplus
 }
