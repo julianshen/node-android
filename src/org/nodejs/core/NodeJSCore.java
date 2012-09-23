@@ -18,8 +18,14 @@ public class NodeJSCore {
             appPath.mkdirs();
         }
   
-        //Extract files from assets to app path 
+        //Copy files from assets to app path 
         AssetManager assets = context.getAssets();
+
+        String[] files = assets.list();
+
+        for(String file:files) {
+            Log.d("nodejs","a:" + file);
+        }
     }
 
     static {
