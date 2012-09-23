@@ -12,6 +12,7 @@ public class NodeJniDemo extends Activity
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+
         NodeJSCore.run("/sdcard/demo.js");
     }
 }
