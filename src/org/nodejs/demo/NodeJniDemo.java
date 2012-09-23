@@ -3,6 +3,8 @@ package org.nodejs.demo;
 import android.app.Activity;
 import android.os.Bundle;
 
+import java.io.IOException;
+
 import org.nodejs.core.NodeJSCore;
 
 public class NodeJniDemo extends Activity
@@ -13,6 +15,11 @@ public class NodeJniDemo extends Activity
     {
         super.onCreate(savedInstanceState);
 
+        try {
+            NodeJSCore.run(this, "demo.js");
+        } catch(IOException e) {
+            e.printStackTrace();
+        }
         NodeJSCore.run("/sdcard/demo.js");
     }
 }
