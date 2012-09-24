@@ -9,8 +9,8 @@ import android.util.Log;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.io.IOException;
-import java.nio.channels.FileChannel;
 
 public class NodeJSCore {
 
@@ -29,6 +29,10 @@ public class NodeJSCore {
         AssetManager assets = context.getAssets();
 
         copyAssetFiles(assets, appPath, NODEJS_PATH);
+
+        //Run
+        File js = new File(appPath, NODEJS_PATH + "/" + mainJS);
+        run(js.toString());
     }
 
     private static void copyAssetFiles(AssetManager assets, File targetDir, String basePath) 
@@ -44,23 +48,23 @@ public class NodeJSCore {
             //basePath is a file. Copy file
             Log.d("nodejs", "copy file: " + basePath);
             File targetFile = new File(targetDir, basePath);
-            AssetFileDescriptor src = assets.openFd(basePath);
+            InputStream src = assets.open(basePath);
             File path = targetFile.getParentFile();
 
             if(!path.exists()) {
                 path.mkdirs();
             }
 
-            FileChannel inChannel = new FileInputStream(src.getFileDescriptor()).getChannel();
-            FileChannel outChannel = new FileOutputStream(targetFile).getChannel();
-            try {
-                 inChannel.transferTo(0, inChannel.size(), outChannel);
-            } finally {
-                 if (inChannel != null)
-                     inChannel.close();
-                 if (outChannel != null)
-                     outChannel.close();
+            FileOutputStream out = new FileOutputStream(targetFile);
+            byte[] buf = new byte[4096];
+            int len;
+
+            if((len = src.read(buf)) > -1) {
+                out.write(buf, 0, len);
             }
+
+            src.close();
+            out.close();
 
             return;
         } else {

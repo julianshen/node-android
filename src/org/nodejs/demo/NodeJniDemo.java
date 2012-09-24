@@ -20,6 +20,5 @@ public class NodeJniDemo extends Activity
         } catch(IOException e) {
             e.printStackTrace();
         }
-        NodeJSCore.run("/sdcard/demo.js");
     }
 }
