@@ -1,24 +1,18 @@
 package org.nodejs.demo;
 
+import org.nodejs.core.NodeJSService;
+
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 
-import java.io.IOException;
+public class NodeJniDemo extends Activity {
+	/** Called when the activity is first created. */
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
 
-import org.nodejs.core.NodeJSCore;
-
-public class NodeJniDemo extends Activity
-{
-    /** Called when the activity is first created. */
-    @Override
-    public void onCreate(Bundle savedInstanceState)
-    {
-        super.onCreate(savedInstanceState);
-
-        try {
-            NodeJSCore.run(this, "demo.js");
-        } catch(IOException e) {
-            e.printStackTrace();
-        }
-    }
+		Intent intent = new Intent(this, NodeJSService.class);
+		startService(intent);
+	}
 }

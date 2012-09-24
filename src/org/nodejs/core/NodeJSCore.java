@@ -14,67 +14,68 @@ import java.io.IOException;
 
 public class NodeJSCore {
 
-    private static final String NODEJS_PATH = "nodejs";
+	private static final String NODEJS_PATH = "nodejs";
 
-    public static native void run(String mainJS) ;
+	public static native void run(String mainJS);
 
-    public static void run(Context context, String mainJS) throws IOException {
-        File appPath = context.getDir(NODEJS_PATH, Context.MODE_PRIVATE);
-        
-        if( !appPath.exists() ) {
-            appPath.mkdirs();
-        }
-  
-        //Copy files from assets to app path 
-        AssetManager assets = context.getAssets();
+	public static void run(Context context, String mainJS) throws IOException {
+		File appPath = context.getDir(NODEJS_PATH, Context.MODE_PRIVATE);
 
-        copyAssetFiles(assets, appPath, NODEJS_PATH);
+		if (!appPath.exists()) {
+			appPath.mkdirs();
+		}
 
-        //Run
-        File js = new File(appPath, NODEJS_PATH + "/" + mainJS);
-        run(js.toString());
-    }
+		// Copy files from assets to app path
+		AssetManager assets = context.getAssets();
 
-    private static void copyAssetFiles(AssetManager assets, File targetDir, String basePath) 
-        throws IOException {
-       
-        String[] files = assets.list(basePath);
+		//TODO: Easy to cause ANR. Fix it!
+		copyAssetFiles(assets, appPath, NODEJS_PATH);
 
-        if(!targetDir.exists()) {
-            targetDir.mkdirs();
-        }
+		// Run
+		File js = new File(appPath, NODEJS_PATH + "/" + mainJS);
+		run(js.toString());
+	}
 
-        if(files.length == 0) {
-            //basePath is a file. Copy file
-            Log.d("nodejs", "copy file: " + basePath);
-            File targetFile = new File(targetDir, basePath);
-            InputStream src = assets.open(basePath);
-            File path = targetFile.getParentFile();
+	private static void copyAssetFiles(AssetManager assets, File targetDir,
+			String basePath) throws IOException {
 
-            if(!path.exists()) {
-                path.mkdirs();
-            }
+		String[] files = assets.list(basePath);
 
-            FileOutputStream out = new FileOutputStream(targetFile);
-            byte[] buf = new byte[4096];
-            int len;
+		if (!targetDir.exists()) {
+			targetDir.mkdirs();
+		}
 
-            if((len = src.read(buf)) > -1) {
-                out.write(buf, 0, len);
-            }
+		if (files.length == 0) {
+			// basePath is a file. Copy file
+			Log.d("nodejs", "copy file: " + basePath);
+			File targetFile = new File(targetDir, basePath);
+			InputStream src = assets.open(basePath);
+			File path = targetFile.getParentFile();
 
-            src.close();
-            out.close();
+			if (!path.exists()) {
+				path.mkdirs();
+			}
 
-            return;
-        } else {
-            for(String file:files) {
-                copyAssetFiles(assets, targetDir, basePath + "/" + file);
-            }    
-        }
-    }
+			FileOutputStream out = new FileOutputStream(targetFile);
+			byte[] buf = new byte[4096];
+			int len;
 
-    static {
-        System.loadLibrary("node_jni");
-    }
+			if ((len = src.read(buf)) > -1) {
+				out.write(buf, 0, len);
+			}
+
+			src.close();
+			out.close();
+
+			return;
+		} else {
+			for (String file : files) {
+				copyAssetFiles(assets, targetDir, basePath + "/" + file);
+			}
+		}
+	}
+
+	static {
+		System.loadLibrary("node_jni");
+	}
 }

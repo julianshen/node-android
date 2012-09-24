@@ -12,5 +12,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <service android:name="org.nodejs.core.NodeJSService">
+            <meta-data android:value="app.js" android:name="script"/>
+        </service>
     </application>
 </manifest> 
