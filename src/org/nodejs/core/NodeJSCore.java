@@ -29,14 +29,14 @@ public class NodeJSCore {
 		AssetManager assets = context.getAssets();
 
 		//TODO: Easy to cause ANR. Fix it!
-		copyAssetFiles(assets, appPath, NODEJS_PATH);
+		installScripts(assets, appPath, NODEJS_PATH);
 
 		// Run
 		File js = new File(appPath, NODEJS_PATH + "/" + mainJS);
 		run(js.toString());
 	}
 
-	private static void copyAssetFiles(AssetManager assets, File targetDir,
+	public static void installScripts(AssetManager assets, File targetDir,
 			String basePath) throws IOException {
 
 		String[] files = assets.list(basePath);
@@ -70,7 +70,7 @@ public class NodeJSCore {
 			return;
 		} else {
 			for (String file : files) {
-				copyAssetFiles(assets, targetDir, basePath + "/" + file);
+				installScripts(assets, targetDir, basePath + "/" + file);
 			}
 		}
 	}
