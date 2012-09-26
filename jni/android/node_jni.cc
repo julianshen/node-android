@@ -14,4 +14,5 @@ void JNICALL Java_org_nodejs_core_NodeJSCore_run(JNIEnv *env, jclass clazz, jstr
 
     LOGD("MAIN SCRIPT: %s", str);
     node::Start(argc, argv);
+    LOGD("NodeJS End");
 }

@@ -23,45 +23,6 @@ public class NodeJSService extends Service {
 	private static final String TAG = "nodejs-service";
 	private static final String NODEJS_PATH = "nodejs";
 
-	private static class NodeJSTask extends AsyncTask<String, Void, String> {
-
-		Context mContext = null;
-
-		NodeJSTask(Context context) {
-			mContext = context;
-		}
-
-		@Override
-		protected String doInBackground(String... params) {
-			// Copy files from assets to app path
-			AssetManager assets = mContext.getAssets();
-
-			File appPath = mContext.getDir(NODEJS_PATH, Context.MODE_PRIVATE);
-
-			if (!appPath.exists()) {
-				appPath.mkdirs();
-			}
-
-			try {
-				installScripts(assets, appPath, NODEJS_PATH);
-			} catch (IOException e) {
-				Log.e(TAG, "Error while installing script", e);
-				return null;
-			}
-
-			String mainJS = params[0];
-			File js = new File(appPath, NODEJS_PATH + "/" + mainJS);
-
-			return js.toString();
-		}
-
-		@Override
-		protected void onPostExecute(String js) {
-			NodeJSCore.run(js);
-		}
-
-	}
-
 	public static void installScripts(AssetManager assets, File targetDir,
 			String basePath) throws IOException {
 
@@ -75,7 +36,7 @@ public class NodeJSService extends Service {
 			// basePath is a file. Copy file
 			Log.d(TAG, "copy file: " + basePath);
 			File targetFile = new File(targetDir, basePath);
-			InputStream src = assets.open(basePath);
+			InputStream src = assets.open(basePath, AssetManager.ACCESS_BUFFER);
 			File path = targetFile.getParentFile();
 
 			if (!path.exists()) {
@@ -86,7 +47,7 @@ public class NodeJSService extends Service {
 			byte[] buf = new byte[4096];
 			int len;
 
-			if ((len = src.read(buf)) > -1) {
+			while ((len = src.read(buf)) > -1) {
 				out.write(buf, 0, len);
 			}
 
@@ -104,8 +65,30 @@ public class NodeJSService extends Service {
 	}
 
 	public void runScript(String mainJS) throws IOException {
-		NodeJSTask task = new NodeJSTask(this);
-		task.execute(mainJS);
+		// Copy files from assets to app path
+		AssetManager assets = getAssets();
+
+		File appPath =getDir(NODEJS_PATH, Context.MODE_PRIVATE);
+
+		if (!appPath.exists()) {
+			appPath.mkdirs();
+		}
+
+		try {
+			installScripts(assets, appPath, NODEJS_PATH);
+		} catch (IOException e) {
+			Log.e(TAG, "Error while installing script", e);
+			stopSelf();
+		}
+
+		File js = new File(appPath, NODEJS_PATH + "/" + mainJS);
+
+		if (js.exists()) {
+			NodeJSCore.run(js.toString());
+		} else {
+			NodeJSService.this.stopSelf();
+		}
+
 	}
 
 	@Override
@@ -145,6 +128,7 @@ public class NodeJSService extends Service {
 			return START_NOT_STICKY;
 		}
 
+		//Will restart
 		return START_STICKY;
 	}
 
