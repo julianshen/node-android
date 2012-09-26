@@ -23,6 +23,51 @@ public class NodeJSService extends Service {
 	private static final String TAG = "nodejs-service";
 	private static final String NODEJS_PATH = "nodejs";
 
+	private class NodeJSTask extends AsyncTask<String, Void, String> {
+
+		Context mContext = null;
+
+		NodeJSTask() {
+			mContext = NodeJSService.this;
+		}
+
+		@Override
+		protected String doInBackground(String... params) {
+			// Copy files from assets to app path
+			AssetManager assets = mContext.getAssets();
+
+			File appPath = mContext.getDir(NODEJS_PATH, Context.MODE_PRIVATE);
+
+			if (!appPath.exists()) {
+				appPath.mkdirs();
+			}
+
+			try {
+				installScripts(assets, appPath, NODEJS_PATH);
+			} catch (IOException e) {
+				Log.e(TAG, "Error while installing script", e);
+				return null;
+			}
+
+			String mainJS = params[0];
+			File js = new File(appPath, NODEJS_PATH + "/" + mainJS);
+
+			return js.toString();
+		}
+
+		@Override
+		protected void onPostExecute(String js) {
+			if (js != null) {
+				Log.d(TAG, "run :" + js);
+				NodeJSCore.run(js);
+				Log.d(TAG, "run end");
+			} else {
+				NodeJSService.this.stopSelf();
+			}
+		}
+
+	}
+
 	public static void installScripts(AssetManager assets, File targetDir,
 			String basePath) throws IOException {
 
@@ -65,30 +110,8 @@ public class NodeJSService extends Service {
 	}
 
 	public void runScript(String mainJS) throws IOException {
-		// Copy files from assets to app path
-		AssetManager assets = getAssets();
-
-		File appPath =getDir(NODEJS_PATH, Context.MODE_PRIVATE);
-
-		if (!appPath.exists()) {
-			appPath.mkdirs();
-		}
-
-		try {
-			installScripts(assets, appPath, NODEJS_PATH);
-		} catch (IOException e) {
-			Log.e(TAG, "Error while installing script", e);
-			stopSelf();
-		}
-
-		File js = new File(appPath, NODEJS_PATH + "/" + mainJS);
-
-		if (js.exists()) {
-			NodeJSCore.run(js.toString());
-		} else {
-			NodeJSService.this.stopSelf();
-		}
-
+		NodeJSTask task = new NodeJSTask();
+		task.execute(mainJS);
 	}
 
 	@Override
@@ -128,7 +151,6 @@ public class NodeJSService extends Service {
 			return START_NOT_STICKY;
 		}
 
-		//Will restart
 		return START_STICKY;
 	}
 
