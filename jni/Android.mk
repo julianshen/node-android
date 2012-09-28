@@ -2,7 +2,7 @@ LOCAL_PATH:= $(call my-dir)
 
 include $(CLEAR_VARS)
 
-NODE_VERSION:= 0.8.8
+NODE_VERSION:= 0.8.11
 NODE_PATH := node-v$(NODE_VERSION)
 NODE_DEP_PATH := $(NODE_PATH)/deps
 PREBUILT_EXEC_PATH := $(LOCAL_PATH)/prebuilt/$(HOST_OS)/sbin

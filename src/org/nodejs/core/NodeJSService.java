@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 import android.app.Service;
 import android.content.ComponentName;
@@ -22,6 +24,7 @@ public class NodeJSService extends Service {
 
 	private static final String TAG = "nodejs-service";
 	private static final String NODEJS_PATH = "nodejs";
+	private static final String DEFAULT_PACKAGE = "app.zip";
 
 	private class NodeJSTask extends AsyncTask<String, Void, String> {
 
@@ -43,7 +46,8 @@ public class NodeJSService extends Service {
 			}
 
 			try {
-				installScripts(assets, appPath, NODEJS_PATH);
+				//installScripts(assets, appPath, NODEJS_PATH);
+				installPackage(assets, appPath);
 			} catch (IOException e) {
 				Log.e(TAG, "Error while installing script", e);
 				return null;
@@ -89,23 +93,62 @@ public class NodeJSService extends Service {
 			}
 
 			FileOutputStream out = new FileOutputStream(targetFile);
-			byte[] buf = new byte[4096];
-			int len;
-
-			while ((len = src.read(buf)) > -1) {
-				out.write(buf, 0, len);
+			try {
+				byte[] buf = new byte[4096];
+				int len;
+	
+				while ((len = src.read(buf)) > -1) {
+					out.write(buf, 0, len);
+				}
+				
+				out.flush();
+			} finally {
+				src.close();
+				out.close();
 			}
-
-			src.close();
-
-			out.flush();
-			out.close();
 
 			return;
 		} else {
 			for (String file : files) {
 				installScripts(assets, targetDir, basePath + "/" + file);
 			}
+		}
+	}
+	
+	public static void installPackage(AssetManager assets, File targetDir) throws IOException {
+		if (!targetDir.exists()) {
+			targetDir.mkdirs();
+		}
+		
+		ZipInputStream zin = new ZipInputStream(assets.open(DEFAULT_PACKAGE));
+		
+		ZipEntry ze = null;
+		
+		try {
+			while((ze = zin.getNextEntry()) != null) {
+				if(ze.isDirectory()) {
+					File path = new File(targetDir, ze.getName());
+					
+					path.mkdirs();
+				} else {
+					File path = new File(targetDir, ze.getName());
+					FileOutputStream out = new FileOutputStream(path);
+					
+					Log.d(TAG, "extract " + ze.getName() + " to " + path);
+					
+					byte[] buf = new byte[4096];
+					int len;
+					
+					while((len = zin.read(buf)) != -1) {
+						out.write(buf, 0, len);
+					}
+					
+					out.flush();
+					out.close();
+				}
+			}
+		} finally {		
+			zin.close();
 		}
 	}
 
