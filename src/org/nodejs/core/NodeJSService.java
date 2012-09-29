@@ -25,6 +25,8 @@ public class NodeJSService extends Service {
 	private static final String TAG = "nodejs-service";
 	private static final String NODEJS_PATH = "nodejs";
 	private static final String DEFAULT_PACKAGE = "app.zip";
+	
+	private String mPackageName = DEFAULT_PACKAGE;
 
 	private class NodeJSTask extends AsyncTask<String, Void, String> {
 
@@ -47,7 +49,7 @@ public class NodeJSService extends Service {
 
 			try {
 				//installScripts(assets, appPath, NODEJS_PATH);
-				installPackage(assets, appPath);
+				installPackage(assets, mPackageName, appPath);
 			} catch (IOException e) {
 				Log.e(TAG, "Error while installing script", e);
 				return null;
@@ -115,12 +117,12 @@ public class NodeJSService extends Service {
 		}
 	}
 	
-	public static void installPackage(AssetManager assets, File targetDir) throws IOException {
+	public static void installPackage(AssetManager assets, String packageName, File targetDir) throws IOException {
 		if (!targetDir.exists()) {
 			targetDir.mkdirs();
 		}
 		
-		ZipInputStream zin = new ZipInputStream(assets.open(DEFAULT_PACKAGE));
+		ZipInputStream zin = new ZipInputStream(assets.open(packageName));
 		
 		ZipEntry ze = null;
 		
@@ -180,6 +182,10 @@ public class NodeJSService extends Service {
 		Bundle metaData = info.metaData;
 
 		String scriptName = metaData.getString("script");
+		
+		if(metaData.getString("node_package") != null) {
+			mPackageName = metaData.getString("node_package");
+		}
 
 		if (scriptName == null) {
 			Log.e(TAG, "Script <" + scriptName
