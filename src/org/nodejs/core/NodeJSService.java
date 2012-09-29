@@ -27,10 +27,12 @@ public class NodeJSService extends Service {
 	private static final String DEFAULT_PACKAGE = "app.zip";
 	
 	private String mPackageName = DEFAULT_PACKAGE;
+	private NodeJSTask mTask = null;
 
 	private class NodeJSTask extends AsyncTask<String, Void, String> {
 
 		Context mContext = null;
+		boolean running = false;
 
 		NodeJSTask() {
 			mContext = NodeJSService.this;
@@ -38,6 +40,8 @@ public class NodeJSService extends Service {
 
 		@Override
 		protected String doInBackground(String... params) {
+			running = true;
+			
 			// Copy files from assets to app path
 			AssetManager assets = mContext.getAssets();
 
@@ -70,6 +74,8 @@ public class NodeJSService extends Service {
 			} else {
 				NodeJSService.this.stopSelf();
 			}
+			
+			running = false;
 		}
 
 	}
@@ -155,8 +161,15 @@ public class NodeJSService extends Service {
 	}
 
 	public void runScript(String mainJS) throws IOException {
-		NodeJSTask task = new NodeJSTask();
-		task.execute(mainJS);
+		synchronized(this) {
+			if(mTask == null) {
+				mTask = new NodeJSTask();
+			}
+			
+			if(!mTask.running) {
+				mTask.execute(mainJS);
+			}
+		}
 	}
 
 	@Override
