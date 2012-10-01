@@ -3,6 +3,7 @@
 #include <android/log.h>
 #include <stdio.h>
 #include "node.h"
+#include "node_android.h"
 
 #define TAG "nodejs"
 #define LOGD(...) __android_log_print(ANDROID_LOG_DEBUG, TAG, __VA_ARGS__)

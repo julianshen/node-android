@@ -7,7 +7,6 @@ local_src_files := \
 	src/cares_wrap.cc \
 	src/fs_event_wrap.cc \
 	src/handle_wrap.cc \
-	src/node.cc \
 	src/node_buffer.cc \
 	src/node_constants.cc \
 	src/node_crypto.cc \
@@ -126,7 +125,7 @@ LOCAL_MODULE_TAGS := optional
 LOCAL_MODULE := node
 
 LOCAL_CPP_EXTENSION := .cc
-LOCAL_SRC_FILES += $(local_node_main_src)
+LOCAL_SRC_FILES += src/node.cc $(local_node_main_src)
 LOCAL_CFLAGS += $(local_c_flags)
 LOCAL_C_INCLUDES += $(local_c_includes)
 LOCAL_STATIC_LIBRARIES := libnode_static libuv_static libssl_static libcrypto_static libv8 libhttpparser_static libz
@@ -143,7 +142,7 @@ LOCAL_MODULE_TAGS := optional
 LOCAL_MODULE := node_jni
 
 LOCAL_CPP_EXTENSION := .cc
-LOCAL_SRC_FILES += $(JNI_SRC_FILES)
+LOCAL_SRC_FILES += ../android/node.cc $(JNI_SRC_FILES)
 LOCAL_CFLAGS += $(local_c_flags)
 LOCAL_C_INCLUDES += $(local_c_includes)
 LOCAL_STATIC_LIBRARIES := libnode_static libuv_static libssl_static libcrypto_static libv8 libhttpparser_static libz
