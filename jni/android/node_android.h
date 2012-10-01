@@ -27,6 +27,8 @@
 
 namespace node {
 
+NODE_EXTERN int AndroidStart(char *mainScript);
+
 class Android {
 public:
   static void Initialize (v8::Handle<v8::Object> target);

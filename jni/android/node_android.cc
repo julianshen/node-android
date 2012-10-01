@@ -38,6 +38,7 @@ namespace node {
 
 using namespace v8;
 
+
 static Handle<Value> Log(const Arguments& args) {                     
   HandleScope scope;                                                   
                                                                       
