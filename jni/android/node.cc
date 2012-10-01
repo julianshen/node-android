@@ -2943,10 +2943,11 @@ static char **copy_argv(int argc, char **argv) {
 }
 
 int AndroidStart(char *mainScript) { 
+  //little hack to argv  
   int argc = 2;
   char *argv[] = {"node", (char *)mainScript};
 
-  //Not set process tilte for Android
+  // Not set process tilte for Android
   // Hack aroung with the argv pointer. Used for process.title = "blah".
   // argv = uv_setup_args(argc, argv);
 
