@@ -52,7 +52,7 @@ static Handle<Value> Log(const Arguments& args) {
   const int level = args[0]->Int32Value();
   String::Utf8Value tag(args[1]);                                     
   String::Utf8Value msg(args[2]);                                     
-                                                                     
+  
   ALOG(level, *tag, *msg);                                                 
                                                                    
   return Undefined();                                             
