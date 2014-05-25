@@ -1,0 +1,56 @@
+#!/bin/bash
+
+export TOOLCHAIN=$PWD/.android-toolchain
+mkdir -p $TOOLCHAIN
+$1/build/tools/make-standalone-toolchain.sh \
+    --toolchain=arm-linux-androideabi-4.8 \
+    --arch=arm \
+    --install-dir=$TOOLCHAIN \
+    --platform=android-9
+export PATH=$TOOLCHAIN/bin:$PATH
+export AR=arm-linux-androideabi-ar
+export CC=arm-linux-androideabi-gcc
+export CXX=arm-linux-androideabi-g++
+export LINK=arm-linux-androideabi-g++
+export GYP_DEFINES="arm_version==\"default\""
+
+cd node-latest
+./configure \
+    --without-snapshot \
+    --dest-cpu=arm \
+    --dest-os=android
+
+make
+
+../.android-toolchain/bin/arm-linux-androideabi-ar rcs libnode.a out/Release/obj.target/node/src/cares_wrap.o \
+out/Release/obj.target/node/src/node_http_parser.o \
+out/Release/obj.target/node/src/smalloc.o \
+out/Release/obj.target/node/src/fs_event_wrap.o \
+out/Release/obj.target/node/src/node_javascript.o \
+out/Release/obj.target/node/src/spawn_sync.o \
+out/Release/obj.target/node/src/handle_wrap.o \
+out/Release/obj.target/node/src/node_main.o \
+out/Release/obj.target/node/src/stream_wrap.o \
+out/Release/obj.target/node/src/node.o \
+out/Release/obj.target/node/src/node_os.o \
+out/Release/obj.target/node/src/string_bytes.o \
+out/Release/obj.target/node/src/node_buffer.o \
+out/Release/obj.target/node/src/node_stat_watcher.o \
+out/Release/obj.target/node/src/tcp_wrap.o \
+out/Release/obj.target/node/src/node_constants.o \
+out/Release/obj.target/node/src/node_v8.o \
+out/Release/obj.target/node/src/timer_wrap.o \
+out/Release/obj.target/node/src/node_contextify.o \
+out/Release/obj.target/node/src/node_watchdog.o \
+out/Release/obj.target/node/src/tls_wrap.o \
+out/Release/obj.target/node/src/node_crypto.o \
+out/Release/obj.target/node/src/node_zlib.o \
+out/Release/obj.target/node/src/tty_wrap.o \
+out/Release/obj.target/node/src/node_crypto_bio.o \
+out/Release/obj.target/node/src/pipe_wrap.o \
+out/Release/obj.target/node/src/udp_wrap.o \
+out/Release/obj.target/node/src/node_crypto_clienthello.o \
+out/Release/obj.target/node/src/process_wrap.o \
+out/Release/obj.target/node/src/uv.o \
+out/Release/obj.target/node/src/node_file.o \
+out/Release/obj.target/node/src/signal_wrap.o

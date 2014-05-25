@@ -1,0 +1,3 @@
+[submodule "jni/node-latest"]
+	path = jni/node-latest
+	url = https://github.com/joyent/node.git

@@ -19,3 +19,5 @@ obj/
 libs/armeabi
 
 local.properties
+
+.android-toolchain/
