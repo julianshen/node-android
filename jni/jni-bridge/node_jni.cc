@@ -1,5 +1,6 @@
 #include <NodeJSAndroidJNI.h>
 #include <jni.h>
+#include <string.h>
 #include <android/log.h>
 #include <stdio.h>
 #include "node.h"
@@ -11,9 +12,13 @@
 
 void node_start(char *mainScript) {
     int argc = 2;
-    char *argv[] = {"node", (char *)mainScript};
+    char cmds[5 + strlen(mainScript) + 1];
+    strcpy(cmds, "node");
+    strcpy(cmds + 5 , mainScript);
 
-    LOGD("MAIN SCRIPT: %s", mainScript);
+    char *argv[] = {cmds, cmds + 5};
+
+    LOGD("MAIN SCRIPT: %s", cmds + 5);
     node::Start(argc, argv);
     LOGD("NodeJS End");
 
