@@ -46,14 +46,18 @@ public class NodeJSService extends Service {
 			AssetManager assets = mContext.getAssets();
 
 			File appPath = mContext.getDir(NODEJS_PATH, Context.MODE_PRIVATE);
+                        boolean shouldInstall = false;
 
 			if (!appPath.exists()) {
 				appPath.mkdirs();
+                                shouldInstall = true;
 			}
 
 			try {
 				//installScripts(assets, appPath, NODEJS_PATH);
-				installPackage(assets, mPackageName, appPath);
+                                if(shouldInstall) {
+				   installPackage(assets, mPackageName, appPath);
+                                }
 			} catch (IOException e) {
 				Log.e(TAG, "Error while installing script", e);
 				return null;
