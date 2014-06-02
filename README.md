@@ -14,6 +14,4 @@ An Android port of node.js. Tested with NDK r9d.
 ============
 You could build demo package with "ant debug"
 
-## NOTE
-============
-* The JNI bridge is not workable yet. 
+
